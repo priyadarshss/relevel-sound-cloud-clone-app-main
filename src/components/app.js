@@ -1,15 +1,39 @@
 import '../styles/app.css'
 import {
   Box,
+  Card,
+  CardContent,
   CircularProgress,
+  Container,
   Grid,
   Typography,
 } from '@mui/material'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
+import Data from "../playlist.json"
 
 function App() {
   document.body.style.background = '#1d1e21'
   const [isLoading, setIsLoading] = useState(true)
+  const [data, setData] = useState(Data)
+
+  function SecondsToMinutes(seconds) {
+    const minutes = Math.floor(seconds / 60)
+    const remainingSeconds = seconds % 60
+    const formattedMinutes = String(minutes).padStart(2, '0')
+    const formattedSeconds = String(remainingSeconds).padStart(2, '0')
+
+    console.log("seconds", seconds)
+
+    return (
+      <div>
+        {formattedMinutes}:{formattedSeconds}
+      </div>
+    )
+  }
+  
+  useEffect(() =>{
+    setIsLoading(false);
+  }, data)
 
   return (
     <div>
@@ -30,22 +54,87 @@ function App() {
           Relevel Sound Cloud
         </h1>
       </Grid>
+      {/* Songs */}
       <Grid>
-        {
-          isLoading ? (
-            <Box
-              sx={{
-                height: '50vh',
+        {isLoading ? (
+          <Box
+            sx={{
+              height: '50vh',
+              display: 'flex',
+              justifyContent: 'center',
+              alignItems: 'center',
+            }}
+          >
+            <CircularProgress />
+          </Box>
+        ) : (
+          <Container fixed>
+            <Grid
+              container
+              spacing={1}
+              style={{
                 display: 'flex',
                 justifyContent: 'center',
                 alignItems: 'center',
+                marginTop: '20px',
+                marginBottom: '100px',
               }}
             >
-              <CircularProgress />
-            </Box>
-          ) : null
-          // data here
-        }
+              {data.map((song, index) => (
+                <Grid
+                  item
+                  xs={3}
+                  style={{
+                    display: 'flex',
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                  }}
+                >
+                  <Card
+                    sx={{
+                      maxWidth: 250,
+                      backgroundColor: 'black',
+                      margin: '10px',
+                    }}
+                  >
+                    <CardContent sx={{ backgroundColor: '#161716' }}>
+                      <img src={song.artworkUrl} alt='' height='200px' />
+                      <Typography
+                        gutterBottom
+                        variant='h7'
+                        component='div'
+                        color='white'
+                      >
+                        {song.title}
+                      </Typography>
+                      <Typography variant='body2' color='grey'>
+                        {song.user.username}
+                      </Typography>
+                    </CardContent>
+                    <CardContent
+                      sx={{
+                        display: 'flex',
+                        justifyContent: 'space-between',
+                        backgroundColor: '#161716',
+                      }}
+                    >
+                      <Typography variant='body2' color='white'>
+                        {SecondsToMinutes(song.duration)}{' '}
+                      </Typography>
+                      <Typography variant='body2' color='white'>
+                        {song.playback_count}
+                      </Typography>
+                    </CardContent>
+                    {/* <CardActions>
+                      <Button size='small'>Share</Button>
+                      <Button size='small'>Learn More</Button>
+                    </CardActions> */}
+                  </Card>
+                </Grid>
+              ))}
+            </Grid>
+          </Container>
+        )}
       </Grid>
       {/* Progress bar */}
       <Grid>
