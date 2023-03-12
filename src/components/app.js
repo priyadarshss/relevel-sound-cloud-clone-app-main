@@ -32,7 +32,8 @@ function App() {
   }
   
   useEffect(() =>{
-    setIsLoading(false);
+    if(data)
+      setIsLoading(false);
   }, data)
 
   return (
@@ -125,10 +126,6 @@ function App() {
                         {song.playback_count}
                       </Typography>
                     </CardContent>
-                    {/* <CardActions>
-                      <Button size='small'>Share</Button>
-                      <Button size='small'>Learn More</Button>
-                    </CardActions> */}
                   </Card>
                 </Grid>
               ))}
